@@ -1,36 +1,20 @@
 import React, { useLayoutEffect } from "react";
 import { Button, View, Text, SafeAreaView, StyleSheet, FlatList, ScrollView } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-
-import CompletedView from "../components/CompletedView";
-import ToDoView from "../components/ToDoView";
-
 import { palette } from "../Styles";
 
-const HomeScreen = () => {
-  const navigation = useNavigation(); // help move between screens
-
+export default function ProgressScreen() {
   return (
     <View style={{ flex: 1 }}>
       <SafeAreaView style={styles.safeArea}>
         {/* Header */}
         <View style={styles.header}>
-          <Text style={styles.title}>Today</Text>
-          <View style={styles.badge}>
-            <Text style={styles.subTitle}>🔥 5 Days</Text>
-          </View>
+          <Text style={styles.title}>Progress</Text>
         </View>
-
-        <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
-          <CompletedView />
-          <ToDoView />
-        </ScrollView>
       </SafeAreaView>
     </View>
   );
-};
-
-export default HomeScreen;
+}
 
 const styles = StyleSheet.create({
   safeArea: {
@@ -54,11 +38,5 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: "#EA2300",
     fontWeight: "700",
-  },
-  badge: {
-    borderRadius: 30,
-    backgroundColor: "#FFD853",
-    padding: 5,
-    paddingHorizontal: 10,
   },
 });

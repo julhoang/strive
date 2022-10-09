@@ -1,5 +1,8 @@
-import React, { useLayoutEffect } from "react";
+import React from "react";
 import { Button, View, Text, StyleSheet, FlatList } from "react-native";
+
+import { palette } from "../Styles";
+import { Feather } from "@expo/vector-icons";
 
 export default function ToDoView() {
   return (
@@ -20,6 +23,9 @@ export default function ToDoView() {
 function Widget({ activity, emoji, progress, goal }) {
   return (
     <View style={styles.card}>
+      <View style={styles.checkMark}>
+        <Feather name="check-circle" size={24} color="darkgrey" />
+      </View>
       <Text style={styles.emoji}>{emoji}</Text>
       <Text style={styles.activity}>{activity}</Text>
       <Text style={styles.goal}>{goal}</Text>
@@ -38,14 +44,14 @@ const styles = StyleSheet.create({
   completedSection: {
     flexDirection: "row",
     flexWrap: "wrap",
-    marginBottom: 50,
+    marginBottom: 100,
   },
   card: {
     padding: 20,
     margin: 7,
-    borderWidth: 1,
     borderRadius: 15,
     width: "45%",
+    backgroundColor: palette.lightgrey,
   },
   emoji: {
     fontSize: 40,
@@ -58,5 +64,17 @@ const styles = StyleSheet.create({
   goal: {
     fontSize: 16,
     fontWeight: "300",
+  },
+  checkMark: {
+    borderRadius: 50,
+    // backgroundColor: "#bcf5bc",
+    width: 30,
+    height: 30,
+    position: "absolute",
+    top: 10,
+    left: 115,
+    justifyContent: "center", //Centered horizontally
+    alignItems: "center", //Centered vertically
+    flex: 1,
   },
 });

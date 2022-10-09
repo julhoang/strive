@@ -4,10 +4,11 @@ export const palette = {
   purple: "#5A31F4",
   green: "#0ECD9D",
   red: "#CD0E61",
-  black: "#0B0B0B",
+  black: "#1F1F1F", // "#0B0B0B",
   white: "#F0F2F3",
   grey: "#636E72",
   primary: "#FF713C",
+  lightgrey: "#FAFAFA",
 };
 
 export const theme = {
