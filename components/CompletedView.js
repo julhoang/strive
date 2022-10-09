@@ -1,7 +1,7 @@
 import React from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, Pressable } from "react-native";
 import { palette } from "../Styles";
-
+import { useNavigation } from "@react-navigation/native";
 import { Feather } from "@expo/vector-icons";
 
 export default function CompletedView() {
@@ -22,15 +22,27 @@ export default function CompletedView() {
 }
 
 function Widget({ activity, emoji, goal }) {
+  const navigation = useNavigation(); // help move between screens
+  const onPressFunction = () => {
+    navigation.navigate("ActivityModal", {
+      activity: activity,
+      emoji: emoji,
+      goal: goal,
+      done: true,
+    });
+  };
+
   return (
     <View style={styles.card}>
-      <View style={styles.checkMark}>
-        <Feather name="check-circle" size={24} color="green" />
-      </View>
+      <Pressable onPress={onPressFunction}>
+        <View style={styles.checkMark}>
+          <Feather name="check-circle" size={24} color="green" />
+        </View>
 
-      <Text style={styles.emoji}>{emoji}</Text>
-      <Text style={styles.activity}>{activity}</Text>
-      <Text style={styles.goal}>{goal}</Text>
+        <Text style={styles.emoji}>{emoji}</Text>
+        <Text style={styles.activity}>{activity}</Text>
+        <Text style={styles.goal}>{goal}</Text>
+      </Pressable>
     </View>
   );
 }
@@ -68,12 +80,11 @@ const styles = StyleSheet.create({
   },
   checkMark: {
     borderRadius: 50,
-    // backgroundColor: "#bcf5bc",
     width: 30,
     height: 30,
     position: "absolute",
-    top: 10,
-    left: 115,
+    top: -10,
+    left: 100,
     justifyContent: "center", //Centered horizontally
     alignItems: "center", //Centered vertically
     flex: 1,

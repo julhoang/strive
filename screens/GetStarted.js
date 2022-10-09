@@ -1,7 +1,6 @@
-import React, { useLayoutEffect } from "react";
-import { Text, View, StyleSheet, SafeAreaView, Pressable } from "react-native";
+import React from "react";
+import { Text, StyleSheet, SafeAreaView, Pressable } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-// import { useFonts, RedHatDisplay_700Bold_Italic } from "@expo-google-fonts/red-hat-display";
 import { palette } from "../Styles";
 
 function GetStarted() {
@@ -34,7 +33,6 @@ const styles = StyleSheet.create({
     color: palette.primary,
     position: "absolute",
     top: "45%",
-    // fontFamily: "RedHatDisplay_700Bold_Italic",
   },
   button: {
     alignItems: "center",

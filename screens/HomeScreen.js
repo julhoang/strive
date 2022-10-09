@@ -1,15 +1,11 @@
-import React, { useLayoutEffect } from "react";
-import { Button, View, Text, SafeAreaView, StyleSheet, FlatList, ScrollView } from "react-native";
-import { useNavigation } from "@react-navigation/native";
+import React from "react";
+import { View, Text, SafeAreaView, StyleSheet, ScrollView } from "react-native";
 
 import CompletedView from "../components/CompletedView";
 import ToDoView from "../components/ToDoView";
-
 import { palette } from "../Styles";
 
 const HomeScreen = () => {
-  const navigation = useNavigation(); // help move between screens
-
   return (
     <View style={{ flex: 1 }}>
       <SafeAreaView style={styles.safeArea}>

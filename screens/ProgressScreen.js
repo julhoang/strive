@@ -1,6 +1,5 @@
-import React, { useLayoutEffect } from "react";
-import { Button, View, Text, SafeAreaView, StyleSheet, FlatList, ScrollView } from "react-native";
-import { useNavigation } from "@react-navigation/native";
+import React from "react";
+import { View, Text, SafeAreaView, StyleSheet } from "react-native";
 import { palette } from "../Styles";
 
 export default function ProgressScreen() {

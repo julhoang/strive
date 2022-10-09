@@ -1,4 +1,4 @@
-import React, { useLayoutEffect } from "react";
+import React from "react";
 import { Button, View, Text, SafeAreaView, StyleSheet, FlatList, ScrollView } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { palette } from "../Styles";
