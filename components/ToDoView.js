@@ -4,18 +4,26 @@ import { useNavigation } from "@react-navigation/native";
 import { palette } from "../Styles";
 import { Feather } from "@expo/vector-icons";
 
-export default function ToDoView() {
+export default function ToDoView({ data }) {
+  let widgets = [];
+  data.forEach((habit) => {
+    widgets.push(
+      <Widget
+        key={habit.activity}
+        activity={habit.activity}
+        emoji={habit.icon}
+        goal={habit.goal}
+      />
+    );
+  });
+
   return (
     <View>
       {/* Header */}
       <Text style={styles.sectionHeader}>Habits Completing</Text>
 
       {/* Widgets */}
-      <View style={styles.completedSection}>
-        <Widget activity="Meditate" emoji="🧘" goal="for 15 mins" />
-        <Widget activity="Healthy Diet" emoji="🥕" goal="All Day" />
-        <Widget activity="Journal" emoji="✍️" goal="at 10PM" />
-      </View>
+      <View style={styles.completedSection}>{widgets}</View>
     </View>
   );
 }
@@ -35,7 +43,11 @@ function Widget({ activity, emoji, progress, goal }) {
     <View style={styles.card}>
       <Pressable onPress={onPressFunction}>
         <View style={styles.checkMark}>
-          <Feather name="check-circle" size={24} color="darkgrey" />
+          <Feather
+            name="check-circle"
+            size={24}
+            color="darkgrey"
+          />
         </View>
         <Text style={styles.emoji}>{emoji}</Text>
         <Text style={styles.activity}>{activity}</Text>

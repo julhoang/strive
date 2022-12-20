@@ -4,7 +4,18 @@ import { palette } from "../Styles";
 import { useNavigation } from "@react-navigation/native";
 import { Feather } from "@expo/vector-icons";
 
-export default function CompletedView() {
+export default function CompletedView({ data }) {
+  let widgets = [];
+  data.forEach((habit) => {
+    widgets.push(
+      <Widget
+        key={habit.activity}
+        activity={habit.activity}
+        emoji={habit.icon}
+        goal={habit.goal}
+      />
+    );
+  });
   return (
     <View>
       {/* Header */}
@@ -12,10 +23,27 @@ export default function CompletedView() {
 
       {/* Widgets */}
       <View style={styles.completedSection}>
-        <Widget activity="Running" emoji="🏃‍♂️" goal="for 10 km" />
-        <Widget activity="Reading" emoji="📚" goal="for 15 mins" />
-        <Widget activity="Coding" emoji="💻" goal="for 30 mins" />
-        <Widget activity="Rise Early" emoji="☀️" goal="before 8 AM" />
+        {widgets}
+        {/* <Widget
+          activity="Running"
+          emoji="🏃‍♂️"
+          goal="for 10 km"
+        />
+        <Widget
+          activity="Reading"
+          emoji="📚"
+          goal="for 15 mins"
+        />
+        <Widget
+          activity="Coding"
+          emoji="💻"
+          goal="for 30 mins"
+        />
+        <Widget
+          activity="Rise Early"
+          emoji="☀️"
+          goal="before 8 AM"
+        /> */}
       </View>
     </View>
   );
@@ -36,7 +64,11 @@ function Widget({ activity, emoji, goal }) {
     <View style={styles.card}>
       <Pressable onPress={onPressFunction}>
         <View style={styles.checkMark}>
-          <Feather name="check-circle" size={24} color="green" />
+          <Feather
+            name="check-circle"
+            size={24}
+            color="green"
+          />
         </View>
 
         <Text style={styles.emoji}>{emoji}</Text>

@@ -1,5 +1,6 @@
 node_modules/
 .expo/
+.expo-shared/
 dist/
 npm-debug.*
 *.jks
@@ -52,8 +53,14 @@ local.properties
 node_modules/
 npm-debug.log
 
+# yarn
+yarn.lock
+
 # BUCK
 buck-out/
 \.buckd/
 android/app/libs
 android/keystores/debug.keystore
+
+#Firebase
+api.js
