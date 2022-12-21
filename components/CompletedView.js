@@ -22,29 +22,7 @@ export default function CompletedView({ data }) {
       <Text style={styles.sectionHeader}>Habits Completed</Text>
 
       {/* Widgets */}
-      <View style={styles.completedSection}>
-        {widgets}
-        {/* <Widget
-          activity="Running"
-          emoji="🏃‍♂️"
-          goal="for 10 km"
-        />
-        <Widget
-          activity="Reading"
-          emoji="📚"
-          goal="for 15 mins"
-        />
-        <Widget
-          activity="Coding"
-          emoji="💻"
-          goal="for 30 mins"
-        />
-        <Widget
-          activity="Rise Early"
-          emoji="☀️"
-          goal="before 8 AM"
-        /> */}
-      </View>
+      <View style={styles.completedSection}>{widgets}</View>
     </View>
   );
 }

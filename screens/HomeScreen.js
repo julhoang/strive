@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { db } from "../firebase-config";
+import React, { useState, useEffect, useContext } from "react";
+import { db, MainDataContext } from "../firebase-config";
 import { collection, doc, getDoc } from "firebase/firestore";
 import { View, Text, SafeAreaView, StyleSheet, ScrollView } from "react-native";
 
@@ -8,38 +8,15 @@ import ToDoView from "../components/ToDoView";
 import { palette } from "../Styles";
 
 const HomeScreen = () => {
-  const [habits, setHabits] = useState();
-  const [streaks, setStreaks] = useState();
+  const MainData = useContext(MainDataContext);
   const [completed, setCompleted] = useState();
   const [progress, setProgress] = useState();
-
-  async function getChosenHabits() {
-    const docRef = doc(db, "habits", "chosenHabits");
-    try {
-      const docSnap = await getDoc(docRef);
-      if (docSnap.exists()) {
-        setHabits(docSnap.data());
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  }
-
-  async function getStreaks() {
-    const docRef = doc(db, "habits", "streaks");
-    try {
-      const docSnap = await getDoc(docRef);
-      if (docSnap.exists()) {
-        setStreaks(docSnap.data().dates);
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  }
 
   function getCurrentStatus() {
     let completedArr = [];
     let progressArr = [];
+
+    const habits = MainData.habits;
 
     Object.keys(habits).forEach((habit) => {
       if (habits[habit]["completed"]) {
@@ -54,16 +31,10 @@ const HomeScreen = () => {
   }
 
   useEffect(() => {
-    if (habits) {
+    if (MainData) {
       getCurrentStatus();
     }
-  }, [habits]);
-
-  useEffect(() => {
-    console.log("load from Firebase");
-    getChosenHabits();
-    getStreaks();
-  }, []);
+  }, [MainData]);
 
   return (
     <View style={{ flex: 1 }}>
@@ -72,9 +43,9 @@ const HomeScreen = () => {
         <View style={styles.header}>
           <Text style={styles.title}>Today</Text>
 
-          {streaks && (
+          {MainData && (
             <View style={styles.badge}>
-              <Text style={styles.subTitle}>🔥 {streaks.length} Days</Text>
+              <Text style={styles.subTitle}>🔥 {MainData.streaks.length} Days</Text>
             </View>
           )}
         </View>

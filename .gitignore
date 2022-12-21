@@ -56,6 +56,10 @@ npm-debug.log
 # yarn
 yarn.lock
 
+# VSCode
+.history/
+
+
 # BUCK
 buck-out/
 \.buckd/

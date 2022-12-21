@@ -6,33 +6,25 @@ import { palette } from "../Styles";
 export default function ActivityModal({ navigation, route }) {
   const { activity, emoji, goal, done } = route.params;
 
-  if (done) {
-    return (
-      <View style={styles.modal}>
-        <Text style={styles.emoji}>{emoji}</Text>
-        <Text style={styles.activity}>{activity}</Text>
-        <Text style={styles.goal}>{goal}</Text>
-        <Text>Congrats you have reach your goal!</Text>
+  return (
+    <View style={styles.modal}>
+      <Text style={styles.emoji}>{emoji}</Text>
+      <Text style={styles.activity}>{activity}</Text>
+      <Text style={styles.goal}>{goal}</Text>
+      <Text>{done ? "Congrats you have reach your goal!" : "You can do this!"}</Text>
 
-        <Pressable style={styles.closeBtn} onPress={() => navigation.goBack()}>
-          <Feather name="x-circle" size={40} color={palette.grey} />
-        </Pressable>
-      </View>
-    );
-  } else {
-    return (
-      <View style={styles.modal}>
-        <Text style={styles.emoji}>{emoji}</Text>
-        <Text style={styles.activity}>{activity}</Text>
-        <Text style={styles.goal}>{goal}</Text>
-        <Text>You can do this!</Text>
-
-        <Pressable style={styles.closeBtn} onPress={() => navigation.goBack()}>
-          <Feather name="x-circle" size={40} color={palette.grey} />
-        </Pressable>
-      </View>
-    );
-  }
+      <Pressable
+        style={styles.closeBtn}
+        onPress={() => navigation.goBack()}
+      >
+        <Feather
+          name="x-circle"
+          size={40}
+          color={palette.grey}
+        />
+      </Pressable>
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({
