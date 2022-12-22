@@ -2,10 +2,30 @@ import React, { useEffect, useState, useContext } from "react";
 import { View, Text, SafeAreaView, StyleSheet, ScrollView } from "react-native";
 import { palette } from "../Styles";
 import { Calendar, CalendarList } from "react-native-calendars";
-import { db, MainDataContext } from "../firebase-config";
+import { db } from "../firebase-config";
+import { doc, getDoc, collection, updateDoc } from "firebase/firestore";
 
-export default function ProgressScreen() {
-  const MainData = useContext(MainDataContext);
+export default function ProgressScreen({ navigation }) {
+  const [streaks, setStreaks] = useState(undefined);
+
+  async function getStreaks() {
+    const docRef = doc(db, "habits", "streaks");
+    try {
+      const docSnap = await getDoc(docRef);
+      if (docSnap.exists()) {
+        console.log("found streaks from firebase");
+        setStreaks(docSnap.data().dates);
+      }
+    } catch (error) {
+      console.log("error loading streaks from firebase");
+    }
+  }
+
+  useEffect(() => {
+    console.log("useeffect for progress");
+    getStreaks();
+  }, []);
+
   const today = new Date().toISOString().slice(0, 10);
   const [clickedDate, setClickedDate] = useState(today);
   const [note, setNote] = useState("");
@@ -21,26 +41,23 @@ export default function ProgressScreen() {
   }
 
   useEffect(() => {
-    let datesObj = {};
-
-    let sortedStreaks = MainData.streaks.sort(
-      (s1, s2) => Date.parse(s2["date"]) - Date.parse(s1["date"])
-    );
-
-    sortedStreaks.map((streak) => {
-      datesObj[streak["date"]] = {
-        dotColor: "#50cebb",
-        note: streak["note"],
-      };
-    });
-
-    setDates(datesObj);
-  }, []);
+    if (streaks) {
+      let datesObj = {};
+      let sortedStreaks = streaks.sort((s1, s2) => Date.parse(s2["date"]) - Date.parse(s1["date"]));
+      sortedStreaks.map((streak) => {
+        datesObj[streak["date"]] = {
+          dotColor: palette.primary,
+          note: streak["note"],
+          marked: true,
+        };
+      });
+      setDates(datesObj);
+    }
+  }, [streaks]);
   /**
    * TODO:
    * Figure how to identify streaks for period view
    */
-
   return (
     <View style={{ flex: 1 }}>
       <SafeAreaView style={styles.safeArea}>
@@ -49,7 +66,6 @@ export default function ProgressScreen() {
           <Text style={styles.title}>Progress</Text>
         </View>
       </SafeAreaView>
-
       <Calendar
         onDayPress={handleSelectDay}
         initialDate={today}
@@ -75,7 +91,6 @@ export default function ProgressScreen() {
         enableSwipeMonths={true}
         hideArrows={true}
       />
-
       <SafeAreaView style={styles.safeArea}>
         <View>
           <Text style={styles.subTitle}>Notes: {clickedDate}</Text>
@@ -117,7 +132,7 @@ const styles = StyleSheet.create({
   },
   calendar: {
     calendarBackground: palette.white,
-    todayTextColor: palette.primary,
+
     monthTextColor: palette.primary,
     textSectionTitleColor: "darkgrey",
     textSectionTitleDisabledColor: palette.black,
@@ -128,7 +143,7 @@ const styles = StyleSheet.create({
     indicatorColor: "blue",
     textMonthFontWeight: "800",
     selectedDotColor: "#ffffff",
-    todayTextColor: palette.primary,
+    // todayTextColor: palette.primary,
     "stylesheet.calendar.header": {
       header: {
         alignItems: "flex-start",

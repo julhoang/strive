@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { View, Text, StyleSheet, Pressable } from "react-native";
 import { palette } from "../Styles";
 import { useNavigation } from "@react-navigation/native";
@@ -18,10 +18,7 @@ export default function CompletedView({ data }) {
   });
   return (
     <View>
-      {/* Header */}
       <Text style={styles.sectionHeader}>Habits Completed</Text>
-
-      {/* Widgets */}
       <View style={styles.completedSection}>{widgets}</View>
     </View>
   );
@@ -94,7 +91,7 @@ const styles = StyleSheet.create({
     height: 30,
     position: "absolute",
     top: -10,
-    left: 100,
+    right: -10,
     justifyContent: "center", //Centered horizontally
     alignItems: "center", //Centered vertically
     flex: 1,

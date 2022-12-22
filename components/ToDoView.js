@@ -95,7 +95,7 @@ const styles = StyleSheet.create({
     height: 30,
     position: "absolute",
     top: -10,
-    left: 100,
+    right: -10,
     justifyContent: "center", //Centered horizontally
     alignItems: "center", //Centered vertically
     flex: 1,
