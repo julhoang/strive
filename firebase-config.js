@@ -9,4 +9,4 @@ const app = initializeApp(firebaseConfig);
 
 export const db = getFirestore(app);
 
-export const booksCollectionRef = collection(db, "habits");
+export const habitsCollectionRef = collection(db, "habits");

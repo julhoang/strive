@@ -1,27 +1,32 @@
 import React from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, Pressable } from "react-native";
+import { useNavigation } from "@react-navigation/native";
 import { palette } from "../Styles";
+import { Feather } from "@expo/vector-icons";
 
-import Widget from "./Widget";
-
-export default function ToDoView({ data }) {
-  let widgets = [];
-  data.forEach((habit) => {
-    widgets.push(
-      <Widget
-        key={habit.activity}
-        {...habit}
-      />
-    );
-  });
+export default function Widget(params) {
+  const { activity, icon, goal, completed } = params;
+  const navigation = useNavigation();
+  const onPressFunction = () => {
+    navigation.navigate("ActivityModal", {
+      ...params,
+    });
+  };
 
   return (
-    <View>
-      {/* Header */}
-      <Text style={styles.sectionHeader}>Habits Completing</Text>
-
-      {/* Widgets */}
-      <View style={styles.completedSection}>{widgets}</View>
+    <View style={styles.card}>
+      <Pressable onPress={onPressFunction}>
+        <View style={styles.checkMark}>
+          <Feather
+            name="check-circle"
+            size={24}
+            color={completed ? "green" : "darkgrey"}
+          />
+        </View>
+        <Text style={styles.emoji}>{icon}</Text>
+        <Text style={styles.activity}>{activity}</Text>
+        <Text style={styles.goal}>{goal}</Text>
+      </Pressable>
     </View>
   );
 }

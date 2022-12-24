@@ -1,8 +1,8 @@
-import React, { useEffect } from "react";
-import { View, Text, StyleSheet, Pressable } from "react-native";
+import React from "react";
+import { View, Text, StyleSheet } from "react-native";
 import { palette } from "../Styles";
-import { useNavigation } from "@react-navigation/native";
-import { Feather } from "@expo/vector-icons";
+
+import Widget from "./Widget";
 
 export default function CompletedView({ data }) {
   let widgets = [];
@@ -10,9 +10,7 @@ export default function CompletedView({ data }) {
     widgets.push(
       <Widget
         key={habit.activity}
-        activity={habit.activity}
-        emoji={habit.icon}
-        goal={habit.goal}
+        {...habit}
       />
     );
   });
@@ -20,36 +18,6 @@ export default function CompletedView({ data }) {
     <View>
       <Text style={styles.sectionHeader}>Habits Completed</Text>
       <View style={styles.completedSection}>{widgets}</View>
-    </View>
-  );
-}
-
-function Widget({ activity, emoji, goal }) {
-  const navigation = useNavigation(); // help move between screens
-  const onPressFunction = () => {
-    navigation.navigate("ActivityModal", {
-      activity: activity,
-      emoji: emoji,
-      goal: goal,
-      done: true,
-    });
-  };
-
-  return (
-    <View style={styles.card}>
-      <Pressable onPress={onPressFunction}>
-        <View style={styles.checkMark}>
-          <Feather
-            name="check-circle"
-            size={24}
-            color="green"
-          />
-        </View>
-
-        <Text style={styles.emoji}>{emoji}</Text>
-        <Text style={styles.activity}>{activity}</Text>
-        <Text style={styles.goal}>{goal}</Text>
-      </Pressable>
     </View>
   );
 }

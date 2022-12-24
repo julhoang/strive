@@ -5,32 +5,28 @@ import { palette } from "../Styles";
 import { db } from "../firebase-config";
 
 export default function ActivityModal({ navigation, route }) {
-  const { activity, emoji, goal, done } = route.params;
+  const { activity, icon, goal, completed, progress, needCounter } = route.params;
 
   function toggleCompletion() {
-    // navigation.goBack();
-    console.log(!done);
-    // navigation.navigate("Home", {
-    //   text: !done,
-    // });
+    // console.log(!completed);
     navigation.navigate({
       name: "Home",
-      params: { newHabit: { activity: activity, done: !done } },
+      params: { newHabit: { ...route.params, completed: !completed } },
       merge: true,
     });
   }
 
   return (
     <View style={styles.modal}>
-      <Text style={styles.emoji}>{emoji}</Text>
+      <Text style={styles.emoji}>{icon}</Text>
       <Text style={styles.activity}>{activity}</Text>
       <Text style={styles.goal}>{goal}</Text>
-      {/* <Text>{done ? "Congrats you have reach your goal!" : "You can do this!"}</Text> */}
+      {/* <Text>{completed ? "Congrats you have reach your goal!" : "You can do this!"}</Text> */}
       <Pressable
         style={styles.actionBtn}
         onPress={toggleCompletion}
       >
-        <Text style={styles.message}>Mark As {done ? "Not Done" : "Done"}</Text>
+        <Text style={styles.message}>Mark As {completed ? "Not completed" : "completed"}</Text>
       </Pressable>
       <Pressable
         style={styles.closeBtn}

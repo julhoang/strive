@@ -11,16 +11,10 @@ const screenOptions = ({ route }) => {
   return {
     headerShown: false,
     tabBarIcon: ({ focused }) => {
-      let iconName;
+      let iconName =
+        route.name === "Home" ? "home" : route.name === "Profile" ? "user" : "trending-up";
       let color = focused ? "red" : "black";
 
-      if (route.name === "Home") {
-        iconName = "home";
-      } else if (route.name === "Profile") {
-        iconName = "user";
-      } else if (route.name === "Progress") {
-        iconName = "trending-up";
-      }
       return (
         <Feather
           name={iconName}

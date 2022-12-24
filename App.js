@@ -4,8 +4,6 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import ActivityModal from "./screens/ActivityModal";
 import MainContent from "./components/MainContent";
 
-import Ionicons from "react-native-vector-icons/Ionicons";
-
 const Stack = createNativeStackNavigator();
 
 export default function App() {

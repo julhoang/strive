@@ -1,14 +1,13 @@
 import React, { useState, useEffect, useRef } from "react";
-import { db } from "../firebase-config";
+import { db, habitsCollectionRef } from "../firebase-config";
 import { View, Text, SafeAreaView, StyleSheet, ScrollView } from "react-native";
 
 import CompletedView from "../components/CompletedView";
 import ToDoView from "../components/ToDoView";
 import { palette } from "../Styles";
-import { doc, getDoc, collection, updateDoc } from "firebase/firestore";
+import { doc, getDocs, updateDoc, query, where, getDoc } from "firebase/firestore";
 
 const HomeScreen = ({ navigation, route }) => {
-  const [habits, setHabits] = useState(undefined);
   const [completed, setCompleted] = useState(undefined);
   const [progress, setProgress] = useState(undefined);
   const [streakCount, setStreakCount] = useState(0);
@@ -16,71 +15,60 @@ const HomeScreen = ({ navigation, route }) => {
   useEffect(() => {
     try {
       if (route.params.newHabit) {
-        // console.log("coming back and text is: ", route.params.newHabit);
-        const habit = route.params.newHabit.activity.toLowerCase();
-        let newHabits = { ...habits };
-        newHabits[habit] = { ...habits[habit], completed: route.params.newHabit.done };
-        setHabits(newHabits);
-
         // update DB
-        const ref = doc(db, "habits", "chosenHabits");
-        updateDoc(ref, newHabits);
+        const ref = doc(db, "habits", route.params.newHabit.activity.toLowerCase());
+        updateDoc(ref, route.params.newHabit);
+
+        // reload page
+        getDataFromFirebase();
       }
     } catch (err) {}
   }, [route.params]);
-
-  async function getHabits() {
-    const docRef = doc(db, "habits", "chosenHabits");
-    try {
-      const docSnap = await getDoc(docRef);
-      if (docSnap.exists()) {
-        console.log("found habits from firebase");
-        setHabits(docSnap.data());
-      }
-    } catch (error) {
-      console.log("error loading habits from firebase");
-    }
-  }
-
-  function getCurrentStatus() {
-    let completedArr = [];
-    let progressArr = [];
-
-    Object.keys(habits).forEach((habit) => {
-      if (habits[habit]["completed"]) {
-        completedArr.push(habits[habit]);
-      } else {
-        progressArr.push(habits[habit]);
-      }
-    });
-
-    setCompleted(completedArr);
-    setProgress(progressArr);
-  }
 
   async function getStreakCount() {
     const docRef = doc(db, "habits", "stats");
     try {
       const docSnap = await getDoc(docRef);
       if (docSnap.exists()) {
-        console.log("found streak count from firebase");
         setStreakCount(docSnap.data().streakCount);
       }
     } catch (error) {
       console.log("error loading streakCount from firebase");
+      console.log(error);
     }
   }
 
-  useEffect(() => {
-    if (habits) {
-      getCurrentStatus();
-    }
-  }, [habits]);
+  async function getCompleted() {
+    let completedArr = [];
+    const q = query(habitsCollectionRef, where("completed", "==", true));
+    const querySnapshot = await getDocs(q);
+    querySnapshot.forEach((doc) => {
+      completedArr.push(doc.data());
+    });
+
+    setCompleted(completedArr);
+  }
+
+  async function getInProgress() {
+    let progressArr = [];
+    const q = query(habitsCollectionRef, where("completed", "==", false));
+    const querySnapshot = await getDocs(q);
+    querySnapshot.forEach((doc) => {
+      progressArr.push(doc.data());
+    });
+
+    setProgress(progressArr);
+  }
+
+  async function getDataFromFirebase() {
+    console.log("loading form firebase");
+    getStreakCount();
+    getCompleted();
+    getInProgress();
+  }
 
   useEffect(() => {
-    console.log("useEffect");
-    getHabits();
-    getStreakCount();
+    getDataFromFirebase();
   }, []);
 
   return (
