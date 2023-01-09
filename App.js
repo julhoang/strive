@@ -2,7 +2,9 @@ import React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import ActivityModal from "./screens/ActivityModal";
-import MainContent from "./components/MainContent";
+// import MainContent from "./components/MainContent";
+import HomeScreen from "./screens/HomeScreen";
+import GetStarted from "./screens/GetStarted";
 
 const Stack = createNativeStackNavigator();
 
@@ -17,14 +19,19 @@ export default function App() {
       >
         <Stack.Group>
           {/* Screens */}
-          {/* <Stack.Screen
+          <Stack.Screen
             name="GetStarted"
             component={GetStarted}
-          /> */}
-          <Stack.Screen
+          />
+          {/* <Stack.Screen
             name="MainContent"
             component={MainContent}
             options={{ title: "MainContent" }}
+          /> */}
+          <Stack.Screen
+            name="Home"
+            component={HomeScreen}
+            options={{ title: "Home" }}
           />
         </Stack.Group>
 

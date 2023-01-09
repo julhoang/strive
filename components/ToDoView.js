@@ -5,6 +5,7 @@ import { palette } from "../Styles";
 import Widget from "./Widget";
 
 export default function ToDoView({ data }) {
+  if (data.length == 0) return <></>;
   let widgets = [];
   data.forEach((habit) => {
     widgets.push(

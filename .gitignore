@@ -68,3 +68,6 @@ android/keystores/debug.keystore
 
 #Firebase
 api.js
+test-data.js
+yarn.lock
+metro.config.js

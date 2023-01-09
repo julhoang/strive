@@ -1,16 +1,32 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { db, habitsCollectionRef } from "../firebase-config";
-import { View, Text, SafeAreaView, StyleSheet, ScrollView } from "react-native";
+import { doc, getDocs, updateDoc, query, where, getDoc } from "firebase/firestore";
+import { View, Text, SafeAreaView, StyleSheet, ScrollView, LayoutAnimation } from "react-native";
+
+import Celebration from "../components/Celebration";
 
 import CompletedView from "../components/CompletedView";
 import ToDoView from "../components/ToDoView";
 import { palette } from "../Styles";
-import { doc, getDocs, updateDoc, query, where, getDoc } from "firebase/firestore";
 
 const HomeScreen = ({ navigation, route }) => {
   const [completed, setCompleted] = useState(undefined);
   const [progress, setProgress] = useState(undefined);
-  const [streakCount, setStreakCount] = useState(0);
+  const [current, setCurrent] = useState(0);
+  const [record, setRecord] = useState(0);
+
+  // use LayoutAnimation to smoothly transition the all the cards
+  LayoutAnimation.configureNext({
+    create: {
+      type: LayoutAnimation.Types.spring,
+      duration: 10,
+      property: LayoutAnimation.Properties.opacity,
+    },
+    update: {
+      duration: 1000,
+      type: LayoutAnimation.Types.easeInOut,
+    },
+  });
 
   useEffect(() => {
     try {
@@ -19,8 +35,12 @@ const HomeScreen = ({ navigation, route }) => {
         const ref = doc(db, "habits", route.params.newHabit.activity.toLowerCase());
         updateDoc(ref, route.params.newHabit);
 
-        // reload page
-        getDataFromFirebase();
+        let addVal = completed.length + (route.params.newHabit["completed"] ? 1 : -1);
+        updateDBStats(addVal == 7);
+
+        if (addVal !== 7) {
+          getDataFromFirebase();
+        }
       }
     } catch (err) {}
   }, [route.params]);
@@ -30,7 +50,8 @@ const HomeScreen = ({ navigation, route }) => {
     try {
       const docSnap = await getDoc(docRef);
       if (docSnap.exists()) {
-        setStreakCount(docSnap.data().streakCount);
+        setCurrent(Number(docSnap.data().current));
+        setRecord(Number(docSnap.data().max));
       }
     } catch (error) {
       console.log("error loading streakCount from firebase");
@@ -60,8 +81,55 @@ const HomeScreen = ({ navigation, route }) => {
     setProgress(progressArr);
   }
 
+  async function updateDBStats(addValue) {
+    console.log("updateDB get called");
+    const ref = doc(db, "habits", "stats");
+    const today = new Date().toISOString().slice(0, 10);
+    const docSnap = await getDoc(ref);
+    let currentStats = {};
+
+    // get current stats
+    if (docSnap.exists()) {
+      currentStats = docSnap.data();
+    }
+
+    // if today has not make a streak
+    if (currentStats.currentDate !== today && addValue) {
+      currentStats.current += 1;
+      setCurrent((prev) => prev + 1);
+      console.log("new current: ", currentStats);
+      if (currentStats.current > currentStats.max) {
+        currentStats.max = currentStats.current;
+        setRecord(currentStats.max);
+      }
+
+      currentStats.currentDate = today;
+      updateDoc(ref, currentStats).then(getDataFromFirebase);
+      console.log("from updateDBStats");
+    } else if (addValue == false && currentStats.currentDate == today) {
+      const yesterday = new Date();
+      yesterday.setDate(yesterday.getDate() - 1);
+      let previousDay = yesterday.toISOString().slice(0, 10);
+      currentStats.current -= 1;
+      currentStats.currentDate = previousDay;
+
+      setCurrent((prev) => prev - 1);
+
+      console.log("new current: ", currentStats);
+
+      if (currentStats.maxDate == today) {
+        currentStats.max -= 1;
+        currentStats.maxDate = previousDay;
+        setRecord(currentStats.max);
+      }
+
+      updateDoc(ref, currentStats).then(getDataFromFirebase);
+      console.log("from updateDBStats");
+    }
+  }
+
   async function getDataFromFirebase() {
-    console.log("loading form firebase");
+    console.log("loading from firebase");
     getStreakCount();
     getCompleted();
     getInProgress();
@@ -76,20 +144,25 @@ const HomeScreen = ({ navigation, route }) => {
       <SafeAreaView style={styles.safeArea}>
         <View style={styles.header}>
           <Text style={styles.title}>Today</Text>
-
-          {streakCount ? (
-            <View style={styles.badge}>
-              <Text style={styles.subTitle}>🔥 {streakCount} Days</Text>
-            </View>
-          ) : null}
         </View>
 
         <ScrollView
           style={styles.scrollView}
           showsVerticalScrollIndicator={false}
         >
+          {current || record ? (
+            <View style={styles.header}>
+              <View style={styles.card}>
+                <Text style={styles.statsHeader}> Record</Text>
+                <Text style={styles.statsData}>🔥 {record} Days</Text>
+              </View>
+              <View style={styles.card}>
+                <Text style={styles.statsHeader}>Current</Text>
+                <Text style={styles.statsData}>🔥 {current} Days</Text>
+              </View>
+            </View>
+          ) : null}
           {completed ? <CompletedView data={completed} /> : null}
-
           {progress ? <ToDoView data={progress} /> : null}
         </ScrollView>
       </SafeAreaView>
@@ -127,5 +200,27 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFD853",
     padding: 5,
     paddingHorizontal: 10,
+  },
+  card: {
+    paddingVertical: 10,
+    margin: 7,
+    borderRadius: 15,
+    width: "45%",
+    backgroundColor: palette.lightgrey,
+    alignItems: "center",
+    justifyContent: "center",
+    borderColor: "#FFD853",
+    borderWidth: 3,
+  },
+  statsHeader: {
+    fontSize: 16,
+    fontWeight: "500",
+    paddingBottom: 10,
+  },
+  statsData: {
+    fontSize: 25,
+    fontWeight: "600",
+    justifyContent: "center", //Centered horizontally
+    color: palette.primary,
   },
 });

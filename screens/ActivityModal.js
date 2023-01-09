@@ -2,13 +2,11 @@ import React from "react";
 import { View, Text, StyleSheet, Pressable } from "react-native";
 import { Feather } from "@expo/vector-icons";
 import { palette } from "../Styles";
-import { db } from "../firebase-config";
 
 export default function ActivityModal({ navigation, route }) {
   const { activity, icon, goal, completed, progress, needCounter } = route.params;
 
   function toggleCompletion() {
-    // console.log(!completed);
     navigation.navigate({
       name: "Home",
       params: { newHabit: { ...route.params, completed: !completed } },
@@ -22,12 +20,14 @@ export default function ActivityModal({ navigation, route }) {
       <Text style={styles.activity}>{activity}</Text>
       <Text style={styles.goal}>{goal}</Text>
       {/* <Text>{completed ? "Congrats you have reach your goal!" : "You can do this!"}</Text> */}
+
       <Pressable
-        style={styles.actionBtn}
+        style={completed ? styles.actionBtnInCompleted : styles.actionBtn}
         onPress={toggleCompletion}
       >
-        <Text style={styles.message}>Mark As {completed ? "Not completed" : "completed"}</Text>
+        <Text style={styles.message}>Mark As {completed ? "Incompleted" : "Completed"}</Text>
       </Pressable>
+
       <Pressable
         style={styles.closeBtn}
         onPress={() => navigation.goBack()}
@@ -73,7 +73,17 @@ const styles = StyleSheet.create({
   actionBtn: {
     backgroundColor: palette.primary,
     borderRadius: 100,
-    width: 200,
+    alignItems: "center",
+    justifyContent: "center",
+    paddingVertical: 12,
+    paddingHorizontal: 32,
+    elevation: 3,
+  },
+  actionBtnInCompleted: {
+    backgroundColor: palette.lightgrey,
+    borderWidth: 3,
+    borderColor: "black",
+    borderRadius: 100,
     alignItems: "center",
     justifyContent: "center",
     paddingVertical: 12,

@@ -9,6 +9,7 @@ export const palette = {
   grey: "#636E72",
   primary: "#FF713C",
   lightgrey: "#FAFAFA",
+  yellow: "#FFD853",
 };
 
 export const theme = {

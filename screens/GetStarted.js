@@ -11,7 +11,7 @@ function GetStarted() {
       <Text style={styles.logo}>Strive</Text>
       <Pressable
         style={styles.button}
-        onPress={() => navigation.navigate("MainContent", { screen: "Home" })}
+        onPress={() => navigation.navigate("Home", { screen: "Home" })}
       >
         <Text style={styles.text}>Get Started</Text>
       </Pressable>
