@@ -4,5 +4,8 @@ Is a habit tracker app inspired by #project50 challenge, where users will take o
 
 ## Progress Update
 
-https://user-images.githubusercontent.com/64108232/198105668-160b8c8f-f0b2-4c08-a96a-641ce0b3e266.mov
+### Latest
+https://user-images.githubusercontent.com/64108232/211256715-58f57d5d-d50f-4f20-918d-4737c01c838a.mov
 
+### Previous Major Updates
+https://user-images.githubusercontent.com/64108232/198105668-160b8c8f-f0b2-4c08-a96a-641ce0b3e266.mov
